@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -21,20 +20,15 @@ export const metadata: Metadata = {
   description: "Aplikasi peminjaman ruang dan laboratorium sekolah",
 };
 
-// Dipisah ke komponen async agar pembacaan cookie (adalahAdmin) berada di dalam <Suspense>
-// sesuai aturan Cache Components Next.js 16.
-async function SidebarDenganStatus() {
-  // Hasil ini HANYA untuk menentukan menu yang tampil di sidebar, bukan pengaman.
-  // Halaman dan Server Action admin tetap wajib memanggil wajibAdmin().
-  const admin = await adalahAdmin();
-  return <AppSidebar isAdmin={admin} />;
-}
-
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // Hasil ini HANYA untuk menentukan menu yang tampil di sidebar, bukan pengaman.
+  // Halaman dan Server Action admin tetap wajib memanggil wajibAdmin().
+  const admin = await adalahAdmin();
+
   return (
     <html
       lang="id"
@@ -49,9 +43,7 @@ export default function RootLayout({
             } as React.CSSProperties
           }
         >
-          <Suspense fallback={<AppSidebar isAdmin={false} />}>
-            <SidebarDenganStatus />
-          </Suspense>
+          <AppSidebar isAdmin={admin} />
           <SidebarInset>{children}</SidebarInset>
         </SidebarProvider>
       </body>
