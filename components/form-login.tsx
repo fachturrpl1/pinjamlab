@@ -36,6 +36,7 @@ export function FormLogin() {
               id="sandi"
               name="sandi"
               type="password"
+              placeholder='Contoh: "Admin123", "321administrator"'
               autoComplete="current-password"
               aria-invalid={Boolean(state.errors?.sandi)}
               aria-describedby={
