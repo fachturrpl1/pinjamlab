@@ -17,10 +17,6 @@ import {
 } from "@/components/ui/sidebar";
 import {
   LayoutDashboardIcon,
-  ListIcon,
-  ChartBarIcon,
-  FolderIcon,
-  UsersIcon,
   CameraIcon,
   FileTextIcon,
   Settings2Icon,
@@ -30,6 +26,9 @@ import {
   FileChartColumnIcon,
   FileIcon,
   CommandIcon,
+  DoorOpen,
+  CalendarDays,
+  SearchCheck,
 } from "lucide-react";
 import { TooltipProvider } from "./ui/tooltip";
 
@@ -42,28 +41,23 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "#",
+      url: "/",
       icon: <LayoutDashboardIcon />,
     },
     {
-      title: "Lifecycle",
-      url: "#",
-      icon: <ListIcon />,
+      title: "Ruang",
+      url: "/ruang",
+      icon: <DoorOpen />,
     },
     {
-      title: "Analytics",
-      url: "#",
-      icon: <ChartBarIcon />,
+      title: "Peminjaman",
+      url: "/peminjaman",
+      icon: <CalendarDays />,
     },
     {
-      title: "Projects",
-      url: "#",
-      icon: <FolderIcon />,
-    },
-    {
-      title: "Team",
-      url: "#",
-      icon: <UsersIcon />,
+      title: "Cek",
+      url: "/cek",
+      icon: <SearchCheck />,
     },
   ],
   navClouds: [

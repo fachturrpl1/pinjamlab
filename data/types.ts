@@ -7,7 +7,7 @@ export type Ruang = {
     aktif: boolean;
 }
 
-export type Peminjam = {
+export type Peminjaman = {
     id: number;
     ruang_id: number;
     peminjam: string;
