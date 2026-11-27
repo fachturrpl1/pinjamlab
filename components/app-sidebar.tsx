@@ -1,10 +1,10 @@
 "use client";
 
-import * as React from "react";
-
-import { NavDocuments } from "@/components/nav-documents";
+import { Suspense } from "react";
+import Link from "next/link";
+import { CommandIcon } from "lucide-react";
+import { NavAdmin } from "@/components/nav-admin";
 import { NavMain } from "@/components/nav-main";
-import { NavSecondary } from "@/components/nav-secondary";
 import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
@@ -15,139 +15,12 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import {
-  LayoutDashboardIcon,
-  CameraIcon,
-  FileTextIcon,
-  Settings2Icon,
-  CircleHelpIcon,
-  SearchIcon,
-  DatabaseIcon,
-  FileChartColumnIcon,
-  FileIcon,
-  CommandIcon,
-  DoorOpen,
-  CalendarDays,
-  SearchCheck,
-} from "lucide-react";
-import { TooltipProvider } from "./ui/tooltip";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  navMain: [
-    {
-      title: "Dashboard",
-      url: "/",
-      icon: <LayoutDashboardIcon />,
-    },
-    {
-      title: "Ruang",
-      url: "/ruang",
-      icon: <DoorOpen />,
-    },
-    {
-      title: "Peminjaman",
-      url: "/peminjaman",
-      icon: <CalendarDays />,
-    },
-    {
-      title: "Cek",
-      url: "/cek",
-      icon: <SearchCheck />,
-    },
-  ],
-  navClouds: [
-    {
-      title: "Capture",
-      icon: <CameraIcon />,
-      isActive: true,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Proposal",
-      icon: <FileTextIcon />,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Prompts",
-      icon: <FileTextIcon />,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Settings",
-      url: "#",
-      icon: <Settings2Icon />,
-    },
-    {
-      title: "Get Help",
-      url: "#",
-      icon: <CircleHelpIcon />,
-    },
-    {
-      title: "Search",
-      url: "#",
-      icon: <SearchIcon />,
-    },
-  ],
-  documents: [
-    {
-      name: "Data Library",
-      url: "#",
-      icon: <DatabaseIcon />,
-    },
-    {
-      name: "Reports",
-      url: "#",
-      icon: <FileChartColumnIcon />,
-    },
-    {
-      name: "Word Assistant",
-      url: "#",
-      icon: <FileIcon />,
-    },
-  ],
-};
-
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ isAdmin }: { isAdmin: boolean }) {
   return (
     <TooltipProvider>
-      <Sidebar collapsible="offcanvas" {...props}>
+      <Sidebar collapsible="offcanvas" variant="inset">
         <SidebarHeader>
           <SidebarMenu>
             <SidebarMenuItem>
@@ -155,21 +28,29 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 asChild
                 className="data-[slot=sidebar-menu-button]:p-1.5!"
               >
-                <a href="">
+                <Link href="/">
                   <CommandIcon className="size-5!" />
-                  <span className="text-base font-semibold">PinjamLab.</span>
-                </a>
+                  <span className="text-base font-semibold">PinjamLab</span>
+                </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarHeader>
+
         <SidebarContent>
-          <NavMain items={data.navMain} />
-          <NavDocuments items={data.documents} />
-          <NavSecondary items={data.navSecondary} className="mt-auto" />
+          {/* Bungkus dengan Suspense karena NavMain dan NavAdmin memakai useSearchParams */}
+          <Suspense fallback={null}>
+            <NavMain />
+          </Suspense>
+          {isAdmin && (
+            <Suspense fallback={null}>
+              <NavAdmin />
+            </Suspense>
+          )}
         </SidebarContent>
+
         <SidebarFooter>
-          <NavUser user={data.user} />
+          <NavUser isAdmin={isAdmin} />
         </SidebarFooter>
       </Sidebar>
     </TooltipProvider>

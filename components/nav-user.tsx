@@ -1,38 +1,57 @@
-"use client"
+"use client";
 
+import Link from "next/link";
 import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar"
+  EllipsisVerticalIcon,
+  LogInIcon,
+  LogOutIcon,
+  UserIcon,
+} from "lucide-react";
+import { logout } from "@/app/actions";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@/components/ui/sidebar"
-import { EllipsisVerticalIcon, CircleUserRoundIcon, CreditCardIcon, BellIcon, LogOutIcon } from "lucide-react"
+} from "@/components/ui/sidebar";
 
-export function NavUser({
-  user,
-}: {
-  user: {
-    name: string
-    email: string
-    avatar: string
+export function NavUser({ isAdmin }: { isAdmin: boolean }) {
+  const { isMobile } = useSidebar();
+
+  // Pengunjung yang belum login melihat tautan menuju halaman /login
+  if (!isAdmin) {
+    return (
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <SidebarMenuButton size="lg" asChild tooltip="Login">
+            <Link href="/login">
+              <Avatar className="h-8 w-8 rounded-lg">
+                <AvatarFallback className="rounded-lg">
+                  <UserIcon className="size-4" />
+                </AvatarFallback>
+              </Avatar>
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-medium">Pengunjung</span>
+                <span className="truncate text-xs text-muted-foreground">
+                  Login
+                </span>
+              </div>
+              <LogInIcon className="ml-auto size-4" />
+            </Link>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    );
   }
-}) {
-  const { isMobile } = useSidebar()
 
+  // Admin yang sudah login melihat menu dropdown untuk Keluar
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -42,15 +61,13 @@ export function NavUser({
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <Avatar className="h-8 w-8 rounded-lg grayscale">
-                <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+              <Avatar className="h-8 w-8 rounded-lg">
+                <AvatarFallback className="rounded-lg bg-primary text-primary-foreground">
+                  A
+                </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user.name}</span>
-                <span className="truncate text-xs text-muted-foreground">
-                  {user.email}
-                </span>
+                <span className="truncate font-medium">Admin</span>
               </div>
               <EllipsisVerticalIcon className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -61,47 +78,24 @@ export function NavUser({
             align="end"
             sideOffset={4}
           >
-            <DropdownMenuLabel className="p-0 font-normal">
-              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-                </Avatar>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user.name}</span>
-                  <span className="truncate text-xs text-muted-foreground">
-                    {user.email}
-                  </span>
-                </div>
-              </div>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <CircleUserRoundIcon
-                />
-                Account
+            <form action={logout}>
+              <DropdownMenuItem
+                asChild
+                onSelect={(e) => {
+                  // Cegah dropdown tertutup sebelum form sempat dikirim ke Server Action
+                  e.preventDefault();
+                  (e.currentTarget as HTMLButtonElement).form?.requestSubmit();
+                }}
+              >
+                <button type="submit" className="w-full cursor-pointer">
+                  <LogOutIcon />
+                  <span>Keluar</span>
+                </button>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCardIcon
-                />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <BellIcon
-                />
-                Notifications
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOutIcon
-              />
-              Log out
-            </DropdownMenuItem>
+            </form>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
-  )
+  );
 }
