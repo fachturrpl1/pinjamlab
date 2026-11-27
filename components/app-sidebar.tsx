@@ -30,7 +30,7 @@ export function AppSidebar({ isAdmin }: { isAdmin: boolean }) {
               >
                 <Link href="/">
                   <CommandIcon className="size-5!" />
-                  <span className="text-base font-semibold">PinjamLab</span>
+                  <span className="text-base font-semibold">LokaRuang.</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
